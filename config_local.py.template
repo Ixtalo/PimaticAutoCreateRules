@@ -1,0 +1,8 @@
+
+myconfig = {
+    "pimatic": {
+        "api_url": "https://my-pimatic-host:8443/api/",
+        "username": "...",
+        "password": "...",
+    }
+}

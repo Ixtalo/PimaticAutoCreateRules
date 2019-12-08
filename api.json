@@ -1,0 +1,2327 @@
+{
+ "actions": {
+  "getGuiSettings": {
+   "description": "Get the GUI config options",
+   "rest": {
+    "type": "GET",
+    "url": "/api/config/settings/gui"
+   },
+   "result": {
+    "guiSettings": {
+     "type": "object",
+     "properties": {
+      "config": {
+       "type": "object"
+      },
+      "defaults": {
+       "type": "object"
+      }
+     }
+    }
+   }
+  },
+  "restart": {
+   "description": "Restart pimatic",
+   "rest": {
+    "type": "POST",
+    "url": "/api/restart"
+   },
+   "result": {
+    "void": {}
+   },
+   "permission": {
+    "action": "restart"
+   }
+  },
+  "getConfig": {
+   "description": "Get the config, fields will be blank if no password was provided",
+   "rest": {
+    "type": "GET",
+    "url": "/api/config"
+   },
+   "params": {
+    "password": {
+     "type": "string",
+     "optional": true
+    }
+   },
+   "result": {
+    "config": {
+     "description": "The config",
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "config",
+    "access": "read"
+   }
+  },
+  "updateConfig": {
+   "description": "Update the config",
+   "rest": {
+    "type": "POST",
+    "url": "/api/config"
+   },
+   "params": {
+    "config": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "config",
+    "access": "write"
+   }
+  },
+  "addRuleByString": {
+   "description": "Add a rule by a string",
+   "rest": {
+    "type": "POST",
+    "url": "/api/rules/:ruleId"
+   },
+   "params": {
+    "ruleId": {
+     "type": "string"
+    },
+    "rule": {
+     "type": "object",
+     "properties": {
+        "name": {
+         "type": "string"
+        },
+        "ruleString": {
+         "type": "string"
+        },
+        "active": {
+         "type": "boolean",
+         "optional": true
+        },
+        "logging": {
+         "type": "boolean",
+         "optional": true
+        }
+     }
+    },
+    "force": {
+     "type": "boolean",
+     "optional": true
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "updateRuleByString": {
+   "rest": {
+    "type": "PATCH",
+    "url": "/api/rules/:ruleId"
+   },
+   "description": "Update a rule by a string",
+   "params": {
+    "ruleId": {
+     "type": "string"
+    },
+    "rule": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string",
+       "optional": true
+      },
+      "ruleString": {
+       "type": "string",
+       "optional": true
+      },
+      "active": {
+       "type": "boolean",
+       "optional": true
+      },
+      "logging": {
+       "type": "boolean",
+       "optional": true
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "removeRule": {
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/rules/:ruleId"
+   },
+   "description": "Remove the rule with the given ID",
+   "params": {
+    "ruleId": {
+     "type": "string"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "getRules": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/rules"
+   },
+   "description": "List all rules",
+   "params": {},
+   "result": {
+    "rules": {
+     "type": "array",
+     "toJson": true
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "getRuleById": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/rules/:ruleId"
+   },
+   "description": "List all rules",
+   "params": {
+    "ruleId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "rule": {
+     "type": "object",
+     "toJson": true
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "read"
+   }
+  },
+  "getRuleActionsHints": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/rules-parser/get-actions-hints"
+   },
+   "description": "Get hints for the rule actions input field",
+   "params": {
+    "actionsInput": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "hints": {
+     "type": "object",
+     "properties": {
+      "actions": {
+       "type": "array"
+      },
+      "tokens": {
+       "type": "array"
+      },
+      "autocomplete": {
+       "type": "array"
+      },
+      "errors": {
+       "type": "array"
+      },
+      "warnings": {
+       "type": "array"
+      },
+      "format": {
+       "type": "array"
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "read"
+   }
+  },
+  "getRuleConditionHints": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/rules-parser/get-condition-hints"
+   },
+   "description": "Get hints for the rule condition input field",
+   "params": {
+    "conditionInput": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "hints": {
+     "type": "object",
+     "properties": {
+      "predicates": {
+       "type": "array"
+      },
+      "tokens": {
+       "type": "array"
+      },
+      "autocomplete": {
+       "type": "array"
+      },
+      "errors": {
+       "type": "array"
+      },
+      "warnings": {
+       "type": "array"
+      },
+      "format": {
+       "type": "array"
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "read"
+   }
+  },
+  "getPredicatePresets": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/rules-parser/get-predicate-presets"
+   },
+   "description": "Get predicates the user can choose from",
+   "params": {},
+   "result": {
+    "presets": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "read"
+   }
+  },
+  "getPredicateInfo": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/rules-parser/get-predicate-info"
+   },
+   "description": "Get predicates info",
+   "params": {
+    "input": {
+     "type": "string"
+    },
+    "predicateProviderClass": {
+     "type": "string",
+     "optional": true
+    }
+   },
+   "result": {
+    "result": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "read"
+   }
+  },
+  "executeAction": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/execute-action"
+   },
+   "description": "Execute a rule action by a given string",
+   "params": {
+    "actionString": {
+     "description": "The action to execute",
+     "type": "string"
+    },
+    "simulate": {
+     "description": "If it is true then only simulate the action.",
+     "type": "boolean",
+     "optional": true
+    },
+    "logging": {
+     "description": "Log result message",
+     "type": "string",
+     "optional": true
+    }
+   },
+   "result": {
+    "message": {
+     "type": "string"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "updateRuleOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/rules"
+   },
+   "description": "Update the order of all rules",
+   "params": {
+    "ruleOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "ruleOrder": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "getVariables": {
+   "description": "List all variables",
+   "rest": {
+    "type": "GET",
+    "url": "/api/variables"
+   },
+   "params": {},
+   "result": {
+    "variables": {
+     "type": "array",
+     "toJson": true
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "read"
+   }
+  },
+  "updateVariable": {
+   "description": "Update a variable value or expression",
+   "rest": {
+    "type": "PATCH",
+    "url": "/api/variables/:name"
+   },
+   "params": {
+    "name": {
+     "type": "string"
+    },
+    "type": {
+     "type": "string",
+     "enum": [
+      "expression",
+      "value"
+     ]
+    },
+    "valueOrExpression": {
+     "type": "string"
+    },
+    "unit": {
+     "type": "string",
+     "optional": true
+    }
+   },
+   "result": {
+    "variable": {
+     "type": "object",
+     "toJson": true
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "write"
+   }
+  },
+  "addVariable": {
+   "description": "Add a value or expression variable",
+   "rest": {
+    "type": "POST",
+    "url": "/api/variables/:name"
+   },
+   "params": {
+    "name": {
+     "type": "string"
+    },
+    "type": {
+     "type": "string",
+     "enum": [
+      "expression",
+      "value"
+     ]
+    },
+    "valueOrExpression": {
+     "type": "string"
+    },
+    "unit": {
+     "type": "string",
+     "optional": true
+    }
+   },
+   "result": {
+    "variable": {
+     "type": "object",
+     "toJson": true
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "write"
+   }
+  },
+  "getVariableByName": {
+   "description": "Get infos about a variable",
+   "rest": {
+    "type": "GET",
+    "url": "/api/variables/:name"
+   },
+   "params": {
+    "name": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "variable": {
+     "type": "object",
+     "toJson": true
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "read"
+   }
+  },
+  "removeVariable": {
+   "description": "Remove a variable",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/variables/:name"
+   },
+   "params": {
+    "name": {
+     "type": "string"
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "write"
+   },
+   "result": {
+    "variable": {
+     "type": "object",
+     "toJson": true
+    }
+   }
+  },
+  "updateVariableOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/variables"
+   },
+   "description": "Update the order of all variables",
+   "params": {
+    "variableOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "variableOrder": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "write"
+   }
+  },
+  "getInstalledPluginsWithInfo": {
+   "description": "List all installed plugins",
+   "rest": {
+    "type": "GET",
+    "url": "/api/plugins"
+   },
+   "params": {},
+   "result": {
+    "plugins": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "read"
+   }
+  },
+  "searchForPluginsWithInfo": {
+   "description": "Search for available plugins",
+   "rest": {
+    "type": "GET",
+    "url": "/api/available-plugins"
+   },
+   "params": {},
+   "result": {
+    "plugins": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "read"
+   }
+  },
+  "getOutdatedPlugins": {
+   "description": "Get outdated plugins",
+   "rest": {
+    "type": "GET",
+    "url": "/api/outdated-plugins"
+   },
+   "params": {},
+   "result": {
+    "outdatedPlugins": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "updates",
+    "access": "read"
+   }
+  },
+  "isPimaticOutdated": {
+   "description": "Is pimatic outdated",
+   "rest": {
+    "type": "GET",
+    "url": "/api/outdated-pimatic"
+   },
+   "params": {},
+   "result": {
+    "outdated": {
+     "tye": "any"
+    }
+   },
+   "permission": {
+    "scope": "updates",
+    "access": "read"
+   }
+  },
+  "installUpdatesAsync": {
+   "description": "Install updates without awaiting result",
+   "rest": {
+    "type": "POST",
+    "url": "/api/update-async"
+   },
+   "params": {
+    "modules": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "status": {
+     "type": "any"
+    }
+   },
+   "permission": {
+    "scope": "updates",
+    "access": "write"
+   }
+  },
+  "uninstallPlugin": {
+   "description": "Uninstalls a plugin completely",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/plugins/:name"
+   },
+   "params": {
+    "name": {
+     "type": "string"
+    }
+   },
+   "permission": {
+    "scope": "updates",
+    "access": "write"
+   }
+  },
+  "removePluginFromConfig": {
+   "description": "Remove a plugin from config",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/config/plugins"
+   },
+   "params": {
+    "pluginName": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "removed": {
+     "type": "boolean"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "write"
+   }
+  },
+  "setPluginActivated": {
+   "description": "Set active state of the plugin",
+   "rest": {
+    "type": "POST",
+    "url": "/api/config/plugins-active"
+   },
+   "params": {
+    "pluginName": {
+     "type": "string"
+    },
+    "active": {
+     "type": "boolean"
+    }
+   },
+   "result": {
+    "pluginUpdated": {
+     "type": "boolean"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "write"
+   }
+  },
+  "getUpdateProcessStatus": {
+   "description": "Get update status",
+   "rest": {
+    "type": "GET",
+    "url": "/api/update-process"
+   },
+   "result": {
+    "info": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "updates",
+    "access": "none"
+   }
+  },
+  "getPluginConfigSchema": {
+   "description": "Get the config schema of a plugin name (must be installed).",
+   "rest": {
+    "type": "GET",
+    "url": "/api/plugin-config-schema/:pluginName"
+   },
+   "params": {
+    "pluginName": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "configSchema": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "read"
+   }
+  },
+  "getPluginConfig": {
+   "description": "Get the config of a plugin.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/plugin-config/:pluginName"
+   },
+   "params": {
+    "pluginName": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "config": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "read"
+   }
+  },
+  "updatePluginConfig": {
+   "description": "Update the config of a plugin.",
+   "rest": {
+    "type": "POST",
+    "url": "/api/plugin-config/:pluginName"
+   },
+   "params": {
+    "pluginName": {
+     "type": "string"
+    },
+    "config": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "write"
+   }
+  },
+  "doesRequireRestart": {
+   "description": "Check if a restart is required.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/restart-required"
+   },
+   "result": {
+    "restartRequired": {
+     "type": "boolean"
+    }
+   },
+   "permission": {
+    "scope": "plugins",
+    "access": "read"
+   }
+  },
+  "queryMessages": {
+   "description": "List log messages",
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/messages"
+   },
+   "params": {
+    "criteria": {
+     "type": "object",
+     "optional": true,
+     "properties": {
+      "level": {
+       "type": "any",
+       "optional": true
+      },
+      "levelOp": {
+       "type": "string",
+       "optional": true
+      },
+      "after": {
+       "type": "date",
+       "optional": true
+      },
+      "before": {
+       "type": "date",
+       "optional": true
+      },
+      "limit": {
+       "type": "number",
+       "optional": true
+      }
+     }
+    }
+   },
+   "result": {
+    "messages": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "messages",
+    "access": "read"
+   }
+  },
+  "deleteMessages": {
+   "description": "Delete messages older than the given date",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/database/messages"
+   },
+   "params": {
+    "criteria": {
+     "type": "object",
+     "optional": true,
+     "properties": {
+      "level": {
+       "type": "any",
+       "optional": true
+      },
+      "levelOp": {
+       "type": "string",
+       "optional": true
+      },
+      "after": {
+       "type": "date",
+       "optional": true
+      },
+      "before": {
+       "type": "date",
+       "optional": true
+      },
+      "limit": {
+       "type": "number",
+       "optional": true
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "messages",
+    "access": "write"
+   }
+  },
+  "addDeviceAttributeLogging": {
+   "description": "Enable or disable logging for an device attribute",
+   "params": {
+    "deviceId": {
+     "type": "string"
+    },
+    "attributeName": {
+     "type": "string"
+    },
+    "time": {
+     "type": [
+      "number",
+      "boolean",
+      "string",
+      "array",
+      "date",
+      "object"
+     ]
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "queryMessagesTags": {
+   "description": "List all tags from the matching messages",
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/messages/tags"
+   },
+   "params": {
+    "criteria": {
+     "type": "object",
+     "optional": true,
+     "properties": {
+      "level": {
+       "type": "any",
+       "optional": true
+      },
+      "levelOp": {
+       "type": "string",
+       "optional": true
+      },
+      "after": {
+       "type": "date",
+       "optional": true
+      },
+      "before": {
+       "type": "date",
+       "optional": true
+      },
+      "limit": {
+       "type": "number",
+       "optional": true
+      }
+     }
+    }
+   },
+   "result": {
+    "tags": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "messages",
+    "access": "read"
+   }
+  },
+  "queryMessagesCount": {
+   "description": "Count of all matches matching the criteria",
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/messages/count"
+   },
+   "params": {
+    "criteria": {
+     "type": "object",
+     "optional": true,
+     "properties": {
+      "level": {
+       "type": "any",
+       "optional": true
+      },
+      "levelOp": {
+       "type": "string",
+       "optional": true
+      },
+      "after": {
+       "type": "date",
+       "optional": true
+      },
+      "before": {
+       "type": "date",
+       "optional": true
+      },
+      "limit": {
+       "type": "number",
+       "optional": true
+      }
+     }
+    }
+   },
+   "result": {
+    "count": {
+     "type": "number"
+    }
+   },
+   "permission": {
+    "scope": "messages",
+    "access": "read"
+   }
+  },
+  "queryDeviceAttributeEvents": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/device-attributes/"
+   },
+   "description": "Get logged values of device attributes",
+   "params": {
+    "criteria": {
+     "type": "object",
+     "optional": true,
+     "properties": {
+      "deviceId": {
+       "type": [
+        "string",
+        "array"
+       ],
+       "optional": true
+      },
+      "attributeName": {
+       "type": [
+        "string",
+        "array"
+       ],
+       "optional": true
+      },
+      "after": {
+       "type": "date",
+       "optional": true
+      },
+      "before": {
+       "type": "date",
+       "optional": true
+      },
+      "order": {
+       "type": "string",
+       "optional": true
+      },
+      "orderDirection": {
+       "type": "string",
+       "optional": true
+      },
+      "offset": {
+       "type": "number",
+       "optional": true
+      },
+      "limit": {
+       "type": "number",
+       "optional": true
+      }
+     }
+    }
+   },
+   "result": {
+    "events": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "queryDeviceAttributeEventsCount": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/device-attributes/count"
+   },
+   "description": "Get count of saved device attributes events",
+   "params": {},
+   "result": {
+    "count": {
+     "type": "number"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "queryDeviceAttributeEventsCounts": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/device-attributes/counts"
+   },
+   "description": "Get count of saved device attributes per attribute",
+   "params": {},
+   "result": {
+    "counts": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "queryDeviceAttributeEventsDevices": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/device-attributes/devices"
+   },
+   "description": "Get all device attribute infos in database",
+   "params": {},
+   "result": {
+    "devices": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "queryDeviceAttributeEventsInfo": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/device-attributes-info"
+   },
+   "description": "Get all device attribute infos in database",
+   "params": {},
+   "result": {
+    "deviceAttributes": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "querySingleDeviceAttributeEvents": {
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/device-attributes/:deviceId/:attributeName"
+   },
+   "description": "Get logged values of device attributes",
+   "params": {
+    "deviceId": {
+     "type": "string"
+    },
+    "attributeName": {
+     "type": "string"
+    },
+    "criteria": {
+     "type": "object",
+     "optional": true,
+     "properties": {
+      "after": {
+       "type": "date",
+       "optional": true
+      },
+      "before": {
+       "type": "date",
+       "optional": true
+      },
+      "groupByTime": {
+       "type": "number",
+       "optional": true
+      },
+      "order": {
+       "type": "string",
+       "optional": true
+      },
+      "orderDirection": {
+       "type": "string",
+       "optional": true
+      },
+      "offset": {
+       "type": "number",
+       "optional": true
+      },
+      "limit": {
+       "type": "number",
+       "optional": true
+      }
+     }
+    }
+   },
+   "result": {
+    "events": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "getDeviceAttributeLogging": {
+   "description": "Get device attribute logging times table",
+   "params": {},
+   "result": {
+    "attributeLogging": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "setDeviceAttributeLogging": {
+   "description": "Set device attribute logging times table",
+   "params": {
+    "attributeLogging": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "write"
+   }
+  },
+  "getDeviceAttributeLoggingTime": {
+   "description": "Get device attribute logging times table",
+   "params": {
+    "deviceId": {
+     "type": "string"
+    },
+    "attributeName": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "timeInfo": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "events",
+    "access": "read"
+   }
+  },
+  "runVacuum": {
+   "description": "Run the sqlite3 vacuum pragma",
+   "params": {},
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/vacuum"
+   },
+   "permission": {
+    "scope": "database",
+    "access": "write"
+   }
+  },
+  "checkDatabase": {
+   "description": "Check database and config integrity",
+   "params": {},
+   "rest": {
+    "type": "GET",
+    "url": "/api/database/check"
+   },
+   "result": {
+    "problems": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "database",
+    "access": "write"
+   }
+  },
+  "deleteDeviceAttribute": {
+   "description": "Delete a device attribute from the database",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/database/device-attribute/by-id"
+   },
+   "params": {
+    "id": {
+     "type": "number"
+    }
+   },
+   "permission": {
+    "scope": "database",
+    "access": "write"
+   }
+  },
+  "updateDeviceAttribute": {
+   "description": "Updates a device attribute info in database",
+   "rest": {
+    "type": "PATCH",
+    "url": "/api/database/device-attribute/by-id"
+   },
+   "params": {
+    "id": {
+     "type": "number"
+    }
+   },
+   "permission": {
+    "scope": "database",
+    "access": "write"
+   }
+  },
+  "getGroups": {
+   "description": "List all groups.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/groups"
+   },
+   "params": {},
+   "result": {
+    "groups": {
+     "type": "array",
+     "items": {
+      "group": {
+       "type": "object"
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "groups",
+    "access": "read"
+   }
+  },
+  "removeGroup": {
+   "description": "Remove group",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/groups/:groupId"
+   },
+   "params": {
+    "groupId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "removed": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "groups",
+    "access": "write"
+   }
+  },
+  "addGroup": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups/:groupId"
+   },
+   "description": "Add a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "group": {
+     "type": "object"
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "groups",
+    "access": "write"
+   }
+  },
+  "updateGroup": {
+   "rest": {
+    "type": "PATCH",
+    "url": "/api/groups/:groupId"
+   },
+   "description": "Update a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "group": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "optional": true
+      },
+      "devicesOrder": {
+       "type": "array",
+       "optional": true
+      },
+      "variablesOrder": {
+       "type": "array",
+       "optional": true
+      },
+      "rulesOrder": {
+       "type": "array",
+       "optional": true
+      }
+     }
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "groups",
+    "access": "write"
+   }
+  },
+  "addDeviceToGroup": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups/:groupId/devices/:deviceId"
+   },
+   "description": "Add a device to a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "deviceId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "deviceItem": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "groups",
+    "access": "write"
+   }
+  },
+  "removeDeviceFromGroup": {
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/groups/:groupId/devices/:deviceId"
+   },
+   "description": "Remove a device from a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "deviceId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "groups",
+    "access": "write"
+   }
+  },
+  "addRuleToGroup": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups/:groupId/rules/:ruleId"
+   },
+   "description": "Add a rule to a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "ruleId": {
+     "type": "string"
+    },
+    "position": {
+     "type": "number",
+     "optional": true
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "removeRuleFromGroup": {
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/groups/:groupId/rules/:ruleId"
+   },
+   "description": "Remove a rule from a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "ruleId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "updateRuleGroupOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups/:groupId/rules"
+   },
+   "description": "Add a rule to a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "ruleOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "rules",
+    "access": "write"
+   }
+  },
+  "addVariableToGroup": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups/:groupId/variables/:variableName"
+   },
+   "description": "Add a variable to a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "variableName": {
+     "type": "string"
+    },
+    "position": {
+     "type": "number",
+     "optional": true
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "write"
+   }
+  },
+  "updateDeviceGroupOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups/:groupId/devices"
+   },
+   "description": "Update device order in group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "deviceOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "write"
+   }
+  },
+  "removeVariableFromGroup": {
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/groups/:groupId/variables/:variableName"
+   },
+   "description": "Remove a variable from a group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "variableName": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "write"
+   }
+  },
+  "updateVariableGroupOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups/:groupId/variables"
+   },
+   "description": "Update variable order in group",
+   "params": {
+    "groupId": {
+     "type": "string"
+    },
+    "variableOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "group": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "variables",
+    "access": "write"
+   }
+  },
+  "updateGroupOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/groups"
+   },
+   "description": "Update the order of all groups",
+   "params": {
+    "groupOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "groupOrder": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "groups",
+    "access": "write"
+   }
+  },
+  "getPages": {
+   "description": "List all pages.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/pages"
+   },
+   "params": {},
+   "result": {
+    "pages": {
+     "type": "array",
+     "items": {
+      "page": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "description": "A user chosen string, used to identify the page.",
+         "type": "string"
+        },
+        "name": {
+         "description": "A user chosen string that should be used to display the page.",
+         "type": "string"
+        },
+        "devices": {
+         "description": "List of all device ids that should be displayed on that page",
+         "type": "array",
+         "items": {
+          "deviceItem": {
+           "type": "object",
+           "properties": {
+            "deviceId": {
+             "description": "The id of the device to display at that position",
+             "type": "string"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "read"
+   }
+  },
+  "getPageById": {
+   "description": "Get a page by ID",
+   "rest": {
+    "type": "GET",
+    "url": "/api/pages/:pageId"
+   },
+   "params": {
+    "pageId": {
+     "description": "The ID of the page that should be returned.",
+     "type": "string"
+    }
+   },
+   "result": {
+    "page": {
+     "description": "The requested page or null if the page was not found.",
+     "type": "object",
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify the page.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the page.",
+       "type": "string"
+      },
+      "devices": {
+       "description": "List of all device ids that should be displayed on that page",
+       "type": "array",
+       "items": {
+        "deviceItem": {
+         "type": "object",
+         "properties": {
+          "deviceId": {
+           "description": "The id of the device to display at that position",
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "read"
+   }
+  },
+  "removePage": {
+   "description": "Remove a page.",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/pages/:pageId"
+   },
+   "params": {
+    "pageId": {
+     "description": "The ID of the page that should be removed.",
+     "type": "string"
+    }
+   },
+   "result": {
+    "removed": {
+     "description": "The removed page.",
+     "type": "object",
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify the page.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the page.",
+       "type": "string"
+      },
+      "devices": {
+       "description": "List of all device ids that should be displayed on that page",
+       "type": "array",
+       "items": {
+        "deviceItem": {
+         "type": "object",
+         "properties": {
+          "deviceId": {
+           "description": "The id of the device to display at that position",
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "write"
+   }
+  },
+  "addPage": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/pages/:pageId"
+   },
+   "description": "Add a page.",
+   "params": {
+    "pageId": {
+     "description": "The ID of the page that should be added.",
+     "type": "string"
+    },
+    "page": {
+     "description": "Object with ID and name of the page to create.",
+     "type": "object",
+     "properties": {
+      "name": {
+       "description": "A user chosen string that should be used to display the page.",
+       "type": "string"
+      }
+     }
+    }
+   },
+   "result": {
+    "page": {
+     "description": "The created page.",
+     "type": "object",
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify the page.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the page.",
+       "type": "string"
+      },
+      "devices": {
+       "description": "List of all device ids that should be displayed on that page",
+       "type": "array",
+       "items": {
+        "deviceItem": {
+         "type": "object",
+         "properties": {
+          "deviceId": {
+           "description": "The id of the device to display at that position",
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "write"
+   }
+  },
+  "updatePage": {
+   "description": "Update a page name or device order.",
+   "rest": {
+    "type": "PATCH",
+    "url": "/api/pages/:pageId"
+   },
+   "params": {
+    "pageId": {
+     "description": "The ID of the page to change.",
+     "type": "string"
+    },
+    "page": {
+     "description": "An object with properties that should be updated.",
+     "type": "object",
+     "properties": {
+      "name": {
+       "description": "The new name to set.",
+       "type": "string",
+       "optional": true
+      },
+      "devicesOrder": {
+       "description": "Array of ordered deviceIDs.",
+       "type": "array",
+       "optional": true,
+       "items": {
+        "deviceId": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   },
+   "result": {
+    "page": {
+     "description": "The updated page.",
+     "type": "object",
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify the page.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the page.",
+       "type": "string"
+      },
+      "devices": {
+       "description": "List of all device ids that should be displayed on that page",
+       "type": "array",
+       "items": {
+        "deviceItem": {
+         "type": "object",
+         "properties": {
+          "deviceId": {
+           "description": "The id of the device to display at that position",
+           "type": "string"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "write"
+   }
+  },
+  "addDeviceToPage": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/pages/:pageId/devices/:deviceId"
+   },
+   "description": "Add a page",
+   "params": {
+    "pageId": {
+     "type": "string"
+    },
+    "deviceId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "page": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "write"
+   }
+  },
+  "removeDeviceFromPage": {
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/pages/:pageId/devices/:deviceId"
+   },
+   "description": "Remove a device from a group.",
+   "params": {
+    "pageId": {
+     "type": "string"
+    },
+    "deviceId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "page": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "write"
+   }
+  },
+  "updatePageOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/pages"
+   },
+   "description": "Update the order of all pages",
+   "params": {
+    "pageOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "pageOrder": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "pages",
+    "access": "write"
+   }
+  },
+  "getDevices": {
+   "description": "List all devices.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/devices"
+   },
+   "params": {},
+   "result": {
+    "devices": {
+     "description": "Array of all devices.",
+     "type": "array",
+     "toJson": true,
+     "items": {
+      "device": {
+       "type": "object",
+       "toJson": true,
+       "properties": {
+        "id": {
+         "description": "A user chosen string, used to identify that device.",
+         "type": "string"
+        },
+        "name": {
+         "description": "A user chosen string that should be used to display the device.",
+         "type": "string"
+        },
+        "template": {
+         "description": "Name of the template, that should be used to display the device.",
+         "type": "string"
+        },
+        "attributes": {
+         "description": "List of all attributes of the device.",
+         "type": "array"
+        },
+        "actions": {
+         "description": "List of all actions of the device.",
+         "type": "array"
+        },
+        "config": {
+         "description": "Config of the device, without default values.",
+         "type": "object"
+        },
+        "configDefaults": {
+         "description": "Default values for the config options.",
+         "type": "object"
+        }
+       }
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "read"
+   }
+  },
+  "getDeviceById": {
+   "description": "Retrieve a device by a given ID.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/devices/:deviceId"
+   },
+   "params": {
+    "deviceId": {
+     "description": "The ID of the device that should be returned.",
+     "type": "string"
+    }
+   },
+   "result": {
+    "device": {
+     "description": "The requested device or null if the device was not found.",
+     "type": "object",
+     "toJson": true,
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify that device.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the device.",
+       "type": "string"
+      },
+      "template": {
+       "description": "Name of the template, that should be used to display the device.",
+       "type": "string"
+      },
+      "attributes": {
+       "description": "List of all attributes of the device.",
+       "type": "array"
+      },
+      "actions": {
+       "description": "List of all actions of the device.",
+       "type": "array"
+      },
+      "config": {
+       "description": "Config of the device, without default values.",
+       "type": "object"
+      },
+      "configDefaults": {
+       "description": "Default values for the config options.",
+       "type": "object"
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "read"
+   }
+  },
+  "updateDeviceOrder": {
+   "rest": {
+    "type": "POST",
+    "url": "/api/devices"
+   },
+   "description": "Update the order of all devices",
+   "params": {
+    "deviceOrder": {
+     "type": "array"
+    }
+   },
+   "result": {
+    "deviceOrder": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "write"
+   }
+  },
+  "getDeviceClasses": {
+   "description": "List all registered device classes.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/device-class"
+   },
+   "result": {
+    "deviceClasses": {
+     "type": "array"
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "read"
+   }
+  },
+  "getDeviceConfigSchema": {
+   "description": "Get the config schema of a device class.",
+   "rest": {
+    "type": "GET",
+    "url": "/api/device-class/:className"
+   },
+   "params": {
+    "className": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "configSchema": {
+     "type": "object"
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "read"
+   }
+  },
+  "addDeviceByConfig": {
+   "description": "Add a device by config values",
+   "rest": {
+    "type": "POST",
+    "url": "/api/device-config"
+   },
+   "params": {
+    "deviceConfig": {
+     "type": "object"
+    }
+   },
+   "result": {
+    "device": {
+     "type": "object",
+     "toJson": true,
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify that device.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the device.",
+       "type": "string"
+      },
+      "template": {
+       "description": "Name of the template, that should be used to display the device.",
+       "type": "string"
+      },
+      "attributes": {
+       "description": "List of all attributes of the device.",
+       "type": "array"
+      },
+      "actions": {
+       "description": "List of all actions of the device.",
+       "type": "array"
+      },
+      "config": {
+       "description": "Config of the device, without default values.",
+       "type": "object"
+      },
+      "configDefaults": {
+       "description": "Default values for the config options.",
+       "type": "object"
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "write"
+   }
+  },
+  "updateDeviceByConfig": {
+   "description": "Update a device by config values",
+   "rest": {
+    "type": "PATCH",
+    "url": "/api/device-config"
+   },
+   "params": {
+    "deviceConfig": {
+     "type": "object"
+    }
+   },
+   "result": {
+    "device": {
+     "type": "object",
+     "toJson": true,
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify that device.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the device.",
+       "type": "string"
+      },
+      "template": {
+       "description": "Name of the template, that should be used to display the device.",
+       "type": "string"
+      },
+      "attributes": {
+       "description": "List of all attributes of the device.",
+       "type": "array"
+      },
+      "actions": {
+       "description": "List of all actions of the device.",
+       "type": "array"
+      },
+      "config": {
+       "description": "Config of the device, without default values.",
+       "type": "object"
+      },
+      "configDefaults": {
+       "description": "Default values for the config options.",
+       "type": "object"
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "write"
+   }
+  },
+  "removeDevice": {
+   "description": "Remove a device from the framework an config",
+   "rest": {
+    "type": "DELETE",
+    "url": "/api/device-config/:deviceId"
+   },
+   "params": {
+    "deviceId": {
+     "type": "string"
+    }
+   },
+   "result": {
+    "device": {
+     "type": "object",
+     "toJson": true,
+     "properties": {
+      "id": {
+       "description": "A user chosen string, used to identify that device.",
+       "type": "string"
+      },
+      "name": {
+       "description": "A user chosen string that should be used to display the device.",
+       "type": "string"
+      },
+      "template": {
+       "description": "Name of the template, that should be used to display the device.",
+       "type": "string"
+      },
+      "attributes": {
+       "description": "List of all attributes of the device.",
+       "type": "array"
+      },
+      "actions": {
+       "description": "List of all actions of the device.",
+       "type": "array"
+      },
+      "config": {
+       "description": "Config of the device, without default values.",
+       "type": "object"
+      },
+      "configDefaults": {
+       "description": "Default values for the config options.",
+       "type": "object"
+      }
+     }
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "write"
+   }
+  },
+  "discoverDevices": {
+   "description": "Start to scan for new devices",
+   "rest": {
+    "type": "POST",
+    "url": "/api/discover-devices"
+   },
+   "params": {
+    "time": {
+     "type": "number",
+     "optional": true
+    }
+   },
+   "permission": {
+    "scope": "devices",
+    "access": "write"
+   }
+  },
+  "callDeviceAction": {
+   "description": "Calls the action of the given device",
+   "rest": {
+    "type": "GET",
+    "url": "/api/device/:deviceId/:actionName",
+    "handler": "callDeviceActionReq"
+   },
+   "socket": {
+    "handler": "callDeviceActionSocket"
+   },
+   "params": {
+    "deviceId": {
+     "type": "string"
+    },
+    "actionName": {
+     "type": "string"
+    }
+   },
+   "permission": {
+    "action": "controlDevices"
+   }
+  }
+ }
+}
