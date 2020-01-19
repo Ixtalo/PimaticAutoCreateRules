@@ -1,46 +1,56 @@
 #!/usr/bin/python3
 
+import sys
+import os
 import logging
 from string import ascii_letters, digits
 from json import dumps
 import requests ## https://2.python-requests.org/en/master/
 from config_local import myconfig
 
-
-"""
-Filename of the output from step 1.
-"""
-INFILE = 'step1_getattrs.txt'
-
-"""
-Flag wheter to overwrite rules (HTTP PATCH)
-"""
-OVERWRITE_RULES = False
-
-"""
-Pimatic time-span string, e.g. "24 hours"
-"""
-TIME_PERIOD = '24 hours'
+## disbale self-sigend certificate warning (InsecureRequestWarning)
+import urllib3
+urllib3.disable_warnings()
 
 
-###############################################################################
-###############################################################################
-###############################################################################
+if len(sys.argv) != 2:
+    print("usage: %s <input.txt>" % os.path.basename(sys.argv[0]))
+    sys.exit(1)
+
+inputfile = sys.argv[1]
+inputfile = os.path.abspath(sys.argv[1])
 
 
 logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.DEBUG)
 piconf = myconfig['pimatic']
 rules_url = "%s/rules" % piconf['api_url'].rstrip('/')
+
+rule_prefix = myconfig['rule_prefix']
+rules_overwrite_flag = myconfig['overwrite_rules']
+mail_receiver = myconfig['mail_receiver']
+default_time = myconfig['default_time_period']
 
 
 ## collect DeviceIds and AttributeNames from CSV from step1
 dev2attr = {}
-with open(INFILE, 'r') as fin:
+with open(inputfile, 'r') as fin:
     for line in fin:
-        if line.strip().startswith('#'):
+        line = line.strip()
+        if line.startswith('#'):
             continue
+        ## e.g., wemosd1_og2_treppe.Temperatur
         dev, attr = line.split('.', 1)
-        dev2attr[dev.strip()] = attr.strip()
+        dev = dev.strip()
+        attr = attr.strip()
+
+        ## e.g., #wemosd1_og2_treppe.Temperatur;12h
+        if ';' in attr:
+            attr, duration = attr.split(';')
+        else:
+            duration = default_time
+
+        dev2attr[dev] = (attr, duration)
 
 logging.info("Amount of active items: %d", len(dev2attr))
 
@@ -54,37 +64,41 @@ detrans = str.maketrans({
 })
 
 ## process each active item (device.attribute)
-for dev, attr in dev2attr.items():
+for dev, (attr, duration) in dev2attr.items():
     logging.info('Processing %s.%s ...', dev, attr)
 
     ## create a valid rule ID
+    ## must be lowercase and contain only plain ASCII characters
     dev_slug = dev.translate(detrans)
     dev_slug = ''.join([c.lower() for c in dev_slug if c in digits+ascii_letters+'_-'])
     attr_slug = attr.translate(detrans)
     attr_slug = ''.join([c.lower() for c in attr_slug if c in digits+ascii_letters+'_-'])
-    ruleid = f"notupdated-{dev_slug}-{attr_slug}"
+    ruleid = f"{rule_prefix}-{dev_slug}-{attr_slug}".lower()
 
     ## rule parameters
     ## https://www.pimatic.org/docs/pimatic/lib/api/
-    conditionToken = f'''when {attr} of {dev} was not updated for {TIME_PERIOD}'''
-    actionsToken = f'''mail to:"mailast@web.de" subject:"[SmartHome] Problem: {ruleid}" text:"{dev}.{attr} was not updated for {TIME_PERIOD}"'''
+    conditionToken = f'''when {attr} of {dev} was not updated for {duration}'''
+    actionsToken = f'''mail to:"{mail_receiver}" subject:"[SmartHome] Problem: {ruleid}" text:"{dev}.{attr} was not updated for {duration}"'''
     payload = {
         "rule": {
-            "name": f"NotUpdated {dev}.{attr}",
+            "name": f"{rule_prefix}_{dev}.{attr}",
             "ruleString": f"{conditionToken} then {actionsToken}",
             "active": True,
             "logging": True
         }
     }
 
+    logging.debug('payload: %s', payload)
+
     ## check if rule already exists
+    logging.debug("Checking if rule '%s' exist already ...", ruleid)
     r = requests.get(f"{rules_url}/{ruleid}",
                      auth=(piconf['username'], piconf['password']),
                      verify=False
                      )
     if r.status_code == 200:
         ## exists already...
-        if OVERWRITE_RULES:
+        if rules_overwrite_flag:
             logging.warning("Rule %s exists already! Overwriting...", ruleid)
             r = requests.patch(f"{rules_url}/{ruleid}",
                                data=dumps(payload),
@@ -92,7 +106,8 @@ for dev, attr in dev2attr.items():
                                auth=(piconf['username'], piconf['password']),
                                verify=False
                                )
-            print(r)
+            if not r.ok:
+                logging.error(r.text)
         else:
             logging.warning("Rule %s exists already! Skipping.", ruleid)
     else:
@@ -103,4 +118,5 @@ for dev, attr in dev2attr.items():
                           auth=(piconf['username'], piconf['password']),
                           verify=False
                           )
-        print(r)
+        if not r.ok:
+            logging.error(r.text)
