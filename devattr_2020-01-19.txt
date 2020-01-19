@@ -148,11 +148,11 @@ bwshp2-2.ENERGY.Power;3h
 #bwshp2-2.ENERGY.Today
 #bwshp2-2.ENERGY.Yesterday
 #bwshp2-2.POWER;3h
-bwshp2_1.ENERGY.Power;3h
+#bwshp2_1.ENERGY.Power;3h
 #bwshp2_1.ENERGY.TODAY
 #bwshp2_1.ENERGY.YESTERDAY
 #bwshp2_1.POWER
-gosund-sp112-2.ENERGY.Power;3h
+#gosund-sp112-2.ENERGY.Power;3h
 #gosund-sp112-2.ENERGY.Today
 #gosund-sp112-2.ENERGY.Yesterday
 #gosund-sp112-2.POWER1
