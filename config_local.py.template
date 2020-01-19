@@ -1,5 +1,9 @@
 
 myconfig = {
+    "default_time_period": "24h",
+    "rule_prefix": "AUTOGEN_notupdated",
+    "overwrite_rules": False,
+    "mail_receiver": "user@example.com",
     "pimatic": {
         "api_url": "https://my-pimatic-host:8443/api/",
         "username": "...",

@@ -1,24 +1,25 @@
 #!/usr/bin/python3
 
-import logging
+import sys
 import os
+import logging
 import requests ## https://2.python-requests.org/en/master/
 from config_local import myconfig
 
-
-"""
-Filename of the output file
-"""
-OUTFILE = 'step1_getattrs.txt'
+## disbale self-sigend certificate warning (InsecureRequestWarning)
+import urllib3
+urllib3.disable_warnings()
 
 
-###############################################################################
-###############################################################################
-###############################################################################
+if len(sys.argv) != 2:
+    print("usage: %s <output.txt>" % os.path.basename(sys.argv[0]))
+    sys.exit(1)
 
+outfile = sys.argv[1]
+outfile = os.path.abspath(sys.argv[1])
 
-if os.path.exists(OUTFILE):
-    raise RuntimeError(f"Output file already exists! {OUTFILE}")
+if os.path.exists(outfile):
+    raise RuntimeError(f"Output file already exists! {outfile}")
 
 
 logging.basicConfig(level=logging.INFO)
@@ -34,11 +35,14 @@ variables_url = "%s/variables" % piconf['api_url'].rstrip('/')
 #r = requests.get(variables_url, auth=(piconf['username'], piconf['password']), cert=('cert.pem', 'privkey.pem'))
 r = requests.get(variables_url, auth=(piconf['username'], piconf['password']), verify=False)
 
+if not r.ok:
+    raise RuntimeError((r.status_code, r.text))
+
 r_json = r.json()
 assert 'variables' in r_json
 assert type(r_json['variables']) is list
 
-with open(OUTFILE, 'w') as fout:
+with open(outfile, 'w') as fout:
     fout.write("## Enable rules creation by uncommenting the entries\n")
     for item in r_json['variables']:
         name = item['name']
