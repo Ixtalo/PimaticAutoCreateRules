@@ -25,7 +25,6 @@ logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(level=logging.DEBUG)
 piconf = myconfig['pimatic']
 rules_url = "%s/rules" % piconf['api_url'].rstrip('/')
-
 rule_prefix = myconfig['rule_prefix']
 rules_overwrite_flag = myconfig['overwrite_rules']
 mail_receiver = myconfig['mail_receiver']
@@ -73,12 +72,12 @@ for dev, (attr, duration) in dev2attr.items():
     dev_slug = ''.join([c.lower() for c in dev_slug if c in digits+ascii_letters+'_-'])
     attr_slug = attr.translate(detrans)
     attr_slug = ''.join([c.lower() for c in attr_slug if c in digits+ascii_letters+'_-'])
-    ruleid = f"{rule_prefix}-{dev_slug}-{attr_slug}".lower()
+    rule_id = f"{rule_prefix}-{dev_slug}-{attr_slug}".lower()
 
     ## rule parameters
     ## https://www.pimatic.org/docs/pimatic/lib/api/
     conditionToken = f'''when {attr} of {dev} was not updated for {duration}'''
-    actionsToken = f'''mail to:"{mail_receiver}" subject:"[SmartHome] Problem: {ruleid}" text:"{dev}.{attr} was not updated for {duration}"'''
+    actionsToken = f'''mail to:"{mail_receiver}" subject:"[SmartHome] Problem: {rule_id}" text:"{dev}.{attr} was not updated for {duration}"'''
     payload = {
         "rule": {
             "name": f"{rule_prefix}_{dev}.{attr}",
@@ -91,16 +90,16 @@ for dev, (attr, duration) in dev2attr.items():
     logging.debug('payload: %s', payload)
 
     ## check if rule already exists
-    logging.debug("Checking if rule '%s' exist already ...", ruleid)
-    r = requests.get(f"{rules_url}/{ruleid}",
+    logging.debug("Checking if rule '%s' exist already ...", rule_id)
+    r = requests.get(f"{rules_url}/{rule_id}",
                      auth=(piconf['username'], piconf['password']),
                      verify=False
                      )
     if r.status_code == 200:
         ## exists already...
         if rules_overwrite_flag:
-            logging.warning("Rule %s exists already! Overwriting...", ruleid)
-            r = requests.patch(f"{rules_url}/{ruleid}",
+            logging.warning("Rule %s exists already! Overwriting...", rule_id)
+            r = requests.patch(f"{rules_url}/{rule_id}",
                                data=dumps(payload),
                                headers={'Content-Type': 'application/json'},
                                auth=(piconf['username'], piconf['password']),
@@ -109,10 +108,10 @@ for dev, (attr, duration) in dev2attr.items():
             if not r.ok:
                 logging.error(r.text)
         else:
-            logging.warning("Rule %s exists already! Skipping.", ruleid)
+            logging.warning("Rule %s exists already! Skipping.", rule_id)
     else:
-        logging.info("Adding rule %s ...", ruleid)
-        r = requests.post(f"{rules_url}/{ruleid}",
+        logging.info("Adding rule %s ...", rule_id)
+        r = requests.post(f"{rules_url}/{rule_id}",
                           data=dumps(payload),
                           headers={'Content-Type': 'application/json'},
                           auth=(piconf['username'], piconf['password']),
