@@ -51,7 +51,7 @@ fritztherm1.temperature
 #jarolift-eg-kuche.position
 #jarolift-eg-whz.position
 #jarolift-ug-hobby.position
-rolladen-automatik-mqtt.state
+#rolladen-automatik-mqtt.state
 #EspGaszaehler.ReedSwitch
 esp-wifi-rssi.ESP_K_HWR
 esp-wifi-rssi.ESP_K_HZ
