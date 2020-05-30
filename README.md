@@ -7,6 +7,8 @@ Use the Pimatic API to retrieve the list of devices and attributes and automatic
 > Temperatur of wemosd1_og2_treppe was not updated for 24 hours
 
 
+![Pimatic Rules Example](example_pimatic_rules.png)
+
 
 ## Introduction
 
